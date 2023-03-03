@@ -37,7 +37,7 @@ app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
   mongoose.connect(
     "mongodb://localhost:27017/money-management-app",
-    { useNewUrlParser: true, strictQuery: true },
+    { useNewUrlParser: true },
     () => {
       console.log("database connected");
     }
