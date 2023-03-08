@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
 import { register } from "../store/actions/authActions";
@@ -11,6 +11,13 @@ const Register = (props) => {
     confirmPassword: "",
     error: props.auth.error,
   });
+
+  useEffect(() => {
+    setState((prevState) => ({
+      ...prevState,
+      error: props.auth.error,
+    }));
+  }, [props.auth.error]);
 
   const navigate = useNavigate();
 

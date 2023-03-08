@@ -4,6 +4,22 @@ import App from "./components/App";
 import reportWebVitals from "./reportWebVitals";
 import { Provider } from "react-redux";
 import store from "./store";
+import * as Type from "./store/actions/types";
+import jwtDecode from "jwt-decode";
+import setAuthToken from "./utils/setAuthToken";
+
+const token = localStorage.getItem("auth_token");
+
+if (token) {
+  let decode = jwtDecode(token);
+  setAuthToken(token);
+  store.dispatch({
+    type: Type.SET_USER,
+    payload: {
+      user: decode,
+    },
+  });
+}
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
