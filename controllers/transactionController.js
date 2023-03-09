@@ -72,22 +72,26 @@ module.exports = {
   },
   update(req, res) {
     let { transactionId } = req.params;
-    User.findByIdAndUpdate(transactionId, { $set: req.body })
+    Transaction.findOneAndUpdate(
+      { _id: transactionId },
+      { $set: req.body },
+      { new: true }
+    )
       .then((result) => {
         res.status(200).json({
           message: "Updated successfully!",
-          ...result,
+          ...result._doc,
         });
       })
       .catch((error) => serverError(res, error));
   },
   remove(req, res) {
-    let { transactionId } = req.body;
-    User.findByIdAndRemove(transactionId)
+    let { transactionId } = req.params;
+    Transaction.findOneAndRemove({ _id: transactionId })
       .then((result) => {
         res.status(200).json({
           message: "Transaction delted!",
-          ...result,
+          ...result._doc,
         });
       })
       .catch((error) => serverError(res, error));

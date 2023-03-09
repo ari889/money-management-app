@@ -27,3 +27,14 @@ export const addNewTransaction = (transaction) => (dispatch) => {
     })
     .catch((error) => console.log(error));
 };
+
+export const removeTransaction = (id) => (dispatch) => {
+  Axios.delete(`/api/transactions/${id}`)
+    .then((response) => {
+      dispatch({
+        type: Types.DELETE_TRANSACTION,
+        payload: { id: response.data._id },
+      });
+    })
+    .catch((error) => console.log(error));
+};

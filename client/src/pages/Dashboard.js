@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import CreateTransaction from "../components/transaction/CreateTransaction";
-import { loadTransactions } from "../store/actions/transactionAction";
+import {
+  loadTransactions,
+  removeTransaction,
+} from "../store/actions/transactionAction";
 
 const Dashboard = (props) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -35,6 +38,13 @@ const Dashboard = (props) => {
               <li key={transaction._id} className="list-group-item">
                 <p>Type: {transaction.type}</p>
                 <p>Amount: {transaction.amount}</p>
+                <button
+                  type="button"
+                  class="btn btn-danger"
+                  onClick={() => props.removeTransaction(transaction._id)}
+                >
+                  Remove
+                </button>
               </li>
             ))}
           </ul>
@@ -50,4 +60,7 @@ const mapStateToProps = (state) => ({
   transactions: state.transactions,
 });
 
-export default connect(mapStateToProps, { loadTransactions })(Dashboard);
+export default connect(mapStateToProps, {
+  loadTransactions,
+  removeTransaction,
+})(Dashboard);
