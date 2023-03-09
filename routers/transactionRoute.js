@@ -1,3 +1,4 @@
+const authenticate = require("../authenticate");
 const {
   create,
   getAll,
@@ -8,14 +9,14 @@ const {
 
 const router = require("express").Router();
 
-router.get("/", getAll);
+router.get("/", authenticate, getAll);
 
-router.post("/", create);
+router.post("/", authenticate, create);
 
-router.get("/:tansactionId", getSingleTransaction);
+router.get("/:tansactionId", authenticate, getSingleTransaction);
 
-router.put("/:transactionId", update);
+router.put("/:transactionId", authenticate, update);
 
-router.delete("/:transactionId", remove);
+router.delete("/:transactionId", authenticate, remove);
 
 module.exports = router;

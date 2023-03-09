@@ -19,11 +19,11 @@ const userSchema = new Schema({
   balance: Number,
   income: Number,
   expense: Number,
-  transections: {
+  transactions: {
     type: [
       {
         type: Schema.Types.ObjectId,
-        ref: "Transection",
+        ref: "Transaction",
       },
     ],
   },

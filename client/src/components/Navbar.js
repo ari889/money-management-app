@@ -29,6 +29,19 @@ const Navbar = (props) => {
                 Home
               </NavLink>
             </li>
+            {props.auth.isAuthentickted && (
+              <>
+                <li className="nav-item">
+                  <NavLink
+                    to="/dashboard"
+                    className="nav-link"
+                    aria-current="page"
+                  >
+                    Dashboard
+                  </NavLink>
+                </li>
+              </>
+            )}
           </ul>
           {!props.auth.isAuthentickted ? (
             <ul className="navbar-nav ms-auto mb-2 mb-lg-0">

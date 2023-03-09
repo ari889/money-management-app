@@ -16,25 +16,34 @@ module.exports = {
     transaction
       .save()
       .then((trans) => {
-        let updatedUser = { ...req.user };
+        let updatedUser = { ...req.user._doc };
         if (type === "income") {
-          updatedUser.balance = updatedUser.amount + balance;
+          updatedUser.balance = updatedUser.balance + amount;
           updatedUser.income = updatedUser.income + amount;
         } else if (type === "expense") {
-          updatedUser.balance = updatedUser.amount - balance;
+          updatedUser.balance = updatedUser.balance - amount;
           updatedUser.expense = updatedUser.expense + amount;
         }
-        updatedUser.transaction.unshift(trans._id);
-        User.findByIdAndUpdate(updatedUser._id, { $set: updatedUser });
-        res.status(201).json({
-          message: "Transaction created successfully!",
-          ...trans,
-        });
+        updatedUser.transactions.unshift(trans._id);
+        User.findByIdAndUpdate(
+          updatedUser._id,
+          { $set: updatedUser },
+          { new: true }
+        )
+          .then((result) => {
+            res.status(201).json({
+              message: "Transaction created successfully!",
+              ...trans._doc,
+              user: result,
+            });
+          })
+          .catch((error) => serverError(res, error));
       })
       .catch((error) => serverError(res, error));
   },
   getAll(req, res) {
-    Transaction.find()
+    let { _id } = req.user;
+    Transaction.find({ author: _id })
       .then((transactions) => {
         if (transactions.length === 0) {
           res.status(200).json({
