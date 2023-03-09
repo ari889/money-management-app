@@ -7,6 +7,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const userRouter = require("./routers/userRoute");
+const transactionRouter = require("./routers/transactionRoute");
 
 /**
  * express app
@@ -22,6 +23,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use("/api/users", userRouter);
+app.use("/api/transactions", transactionRouter);
 
 app.get("/", (req, res) => {
   res.json({
