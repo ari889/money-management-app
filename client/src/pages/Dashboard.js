@@ -1,19 +1,48 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import CreateTransaction from "../components/transaction/CreateTransaction";
+import UpdateTransaction from "../components/transaction/UpdateTransaction";
 import {
   loadTransactions,
   removeTransaction,
 } from "../store/actions/transactionAction";
 
 const Dashboard = (props) => {
-  const [isOpen, setIsOpen] = useState(false);
+  let [state, setState] = useState({
+    isOpenCreate: false,
+    isOpenUpdate: false,
+    id: "",
+  });
+
   useEffect(() => {
     props.loadTransactions();
   }, []);
 
-  const onChangeModal = () => {
-    setIsOpen((prevState) => !prevState);
+  const openCreateModal = () => {
+    setState((prevState) => ({
+      ...state,
+      isOpenCreate: true,
+    }));
+  };
+  const closeCreateModal = () => {
+    setState((prevState) => ({
+      ...state,
+      isOpenCreate: false,
+    }));
+  };
+  const openUpdateModal = (id) => {
+    setState((prevState) => ({
+      ...state,
+      isOpenUpdate: true,
+      id: id,
+    }));
+  };
+  const closeUpdateModal = () => {
+    setState((prevState) => ({
+      ...state,
+      isOpenUpdate: false,
+      id: "",
+    }));
   };
 
   let { auth, transactions } = props;
@@ -27,7 +56,7 @@ const Dashboard = (props) => {
           <button
             type="button"
             className="btn btn-success"
-            onClick={onChangeModal}
+            onClick={openCreateModal}
           >
             Create Transactions
           </button>
@@ -45,12 +74,26 @@ const Dashboard = (props) => {
                 >
                   Remove
                 </button>
+                {state.id === transaction._id ? (
+                  <UpdateTransaction
+                    isOpen={state.isOpenUpdate}
+                    close={closeUpdateModal}
+                    transaction={transaction}
+                  />
+                ) : null}
+                <button
+                  type="button"
+                  class="btn btn-warning"
+                  onClick={() => openUpdateModal(transaction._id)}
+                >
+                  Edit
+                </button>
               </li>
             ))}
           </ul>
         </div>
       </div>
-      <CreateTransaction isOpen={isOpen} toggle={onChangeModal} />
+      <CreateTransaction isOpen={state.isOpenCreate} close={closeCreateModal} />
     </>
   );
 };

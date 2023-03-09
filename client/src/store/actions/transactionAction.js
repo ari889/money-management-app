@@ -4,7 +4,6 @@ import Axios from "axios";
 export const loadTransactions = () => (dispatch) => {
   Axios.get("/api/transactions/")
     .then((response) => {
-      console.log(response.data, "transactions");
       dispatch({
         type: Types.LOAD_TRANSACTIONS,
         payload: {
@@ -34,6 +33,17 @@ export const removeTransaction = (id) => (dispatch) => {
       dispatch({
         type: Types.DELETE_TRANSACTION,
         payload: { id: response.data._id },
+      });
+    })
+    .catch((error) => console.log(error));
+};
+
+export const updateTransaction = (id, transaction) => (dispatch) => {
+  Axios.put(`/api/transactions/${id}`, transaction)
+    .then((response) => {
+      dispatch({
+        type: Types.UPDATE_TRANSACTION,
+        payload: { transaction: response.data.transaction },
       });
     })
     .catch((error) => console.log(error));

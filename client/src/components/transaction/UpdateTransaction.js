@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import { connect } from "react-redux";
-import { addNewTransaction } from "../../store/actions/transactionAction";
+import { updateTransaction } from "../../store/actions/transactionAction";
 
 const customStyles = {
   content: {
@@ -14,15 +14,22 @@ const customStyles = {
   },
 };
 
-const CreateTransaction = (props) => {
+const UpdateTransaction = (props) => {
   const [state, setState] = useState({
     amount: 0,
-    type: "",
     note: "",
     error: {},
   });
 
-  const { amount, type, note, error } = state;
+  useEffect(() => {
+    setState({
+      ...state,
+      amount: props.transaction.amount,
+      note: props.transaction.note,
+    });
+  }, []);
+
+  const { amount, note, error } = state;
 
   const onChangeHandler = (event) => {
     setState((prevState) => ({
@@ -33,15 +40,14 @@ const CreateTransaction = (props) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    let { amount, type, note } = state;
-    props.addNewTransaction({
+    let { amount, note } = state;
+    props.updateTransaction(props.transaction._id, {
       amount,
-      type,
       note,
     });
+    props.close();
     setState({
       amount: 0,
-      type: "",
       note: "",
       error: {},
     });
@@ -54,7 +60,7 @@ const CreateTransaction = (props) => {
       style={customStyles}
       contentLabel="Create new transaction"
     >
-      <h2>Create new transaction</h2>
+      <h2>Update transaction</h2>
       <form onSubmit={handleSubmit}>
         <label htmlFor="amount" className="form-label mt-2">
           Amount:
@@ -69,21 +75,6 @@ const CreateTransaction = (props) => {
           onChange={onChangeHandler}
         />
         {error.amount && <div className="invalid-feedback">{error.amount}</div>}
-        <label htmlFor="type" className="form-label mt-2">
-          Type:
-        </label>
-        <select
-          name="type"
-          className={error.amount ? "form-select is-invalid" : "form-select"}
-          value={type}
-          onChange={onChangeHandler}
-          id="type"
-        >
-          <option value="">Please select a type</option>
-          <option value="expense">Expense</option>
-          <option value="income">Income</option>
-        </select>
-        {error.type && <div className="invalid-feedback">{error.type}</div>}
         <label htmlFor="note" className="form-label mt-2">
           Note:
         </label>
@@ -113,4 +104,4 @@ const CreateTransaction = (props) => {
   );
 };
 
-export default connect(null, { addNewTransaction })(CreateTransaction);
+export default connect(null, { updateTransaction })(UpdateTransaction);

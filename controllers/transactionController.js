@@ -80,7 +80,7 @@ module.exports = {
       .then((result) => {
         res.status(200).json({
           message: "Updated successfully!",
-          ...result._doc,
+          transaction: result,
         });
       })
       .catch((error) => serverError(res, error));
