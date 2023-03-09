@@ -21,7 +21,11 @@ const Dashboard = (props) => {
         <div className="col-md-8 offset-md-2">
           <h2>Welcome {auth.user.name}</h2>
           <p>Your Email is {auth.user.email}</p>
-          <button type="button" class="btn btn-success" onClick={onChangeModal}>
+          <button
+            type="button"
+            className="btn btn-success"
+            onClick={onChangeModal}
+          >
             Create Transactions
           </button>
           <br />

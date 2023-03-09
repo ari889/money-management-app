@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
+import { connect } from "react-redux";
+import { addNewTransaction } from "../../store/actions/transactionAction";
 
 const customStyles = {
   content: {
@@ -29,6 +31,22 @@ const CreateTransaction = (props) => {
     }));
   };
 
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    let { amount, type, note } = state;
+    props.addNewTransaction({
+      amount,
+      type,
+      note,
+    });
+    setState({
+      amount: 0,
+      type: "",
+      note: "",
+      error: {},
+    });
+  };
+
   return (
     <Modal
       isOpen={props.isOpen}
@@ -37,7 +55,7 @@ const CreateTransaction = (props) => {
       contentLabel="Create new transaction"
     >
       <h2>Create new transaction</h2>
-      <form>
+      <form onSubmit={handleSubmit}>
         <label htmlFor="amount" className="form-label mt-2">
           Amount:
         </label>
@@ -55,6 +73,7 @@ const CreateTransaction = (props) => {
           Type:
         </label>
         <select
+          name="type"
           className={error.amount ? "form-select is-invalid" : "form-select"}
           value={type}
           onChange={onChangeHandler}
@@ -94,4 +113,4 @@ const CreateTransaction = (props) => {
   );
 };
 
-export default CreateTransaction;
+export default connect(null, { addNewTransaction })(CreateTransaction);
